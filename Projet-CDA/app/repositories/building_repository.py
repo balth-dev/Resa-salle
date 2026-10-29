@@ -15,3 +15,4 @@ class BuildingRepository:
             if building:
                 session.expunge(building)
             return building
+

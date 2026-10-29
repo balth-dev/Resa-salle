@@ -165,3 +165,45 @@ def test_get_by_classroom_and_date(db_session):
     assert results[0].start_time == time(9, 0)
     assert results[1].start_time == time(14, 0)
 
+
+
+def test_cancel_reservation(db_session):
+    repo = ReservationRepository()
+    res = repo.add({
+        "date_reservation": date(2026, 11, 1),
+        "start_time": time(9, 0),
+        "end_time": time(11, 0),
+        "status": "confirmée",
+        "id_classroom": 10,
+        "id_user": 1,
+    })
+
+    success = repo.cancel(res.id_reservation)
+    assert success is True
+
+    # Après annulation, le créneau ne doit plus être en conflit
+    conflict = repo.check_conflict(10, date(2026, 11, 1), time(9, 30), time(10, 30))
+    assert conflict is None
+
+
+def test_get_by_user(db_session):
+    repo = ReservationRepository()
+    repo.add({
+        "date_reservation": date(2026, 11, 1),
+        "start_time": time(9, 0),
+        "end_time": time(11, 0),
+        "status": "confirmée",
+        "id_classroom": 10,
+        "id_user": 1,
+    })
+    repo.add({
+        "date_reservation": date(2026, 11, 2),
+        "start_time": time(14, 0),
+        "end_time": time(15, 0),
+        "status": "confirmée",
+        "id_classroom": 10,
+        "id_user": 1,
+    })
+
+    user_reservations = repo.get_by_user(1)
+    assert len(user_reservations) == 2

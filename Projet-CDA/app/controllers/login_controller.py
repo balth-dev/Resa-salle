@@ -7,6 +7,7 @@ from app.views.dashboard import DashboardView
 from app.repositories.user_repository import UserRepository
 from app.repositories.classroom_repository import ClassroomRepository
 from app.repositories.reservation_repository import ReservationRepository
+from app.repositories.building_repository import BuildingRepository
 from app.controllers.dashboard_controller import DashboardController
 
 
@@ -37,39 +38,37 @@ class LoginController:
             return
 
         if user and self._verify_password(password, user.password):
-            # Connexion réussie - afficher le dashboard
             self._show_dashboard(user)
         else:
-            # Identifiants incorrects
             self.view.invalid_credential()
 
     def _show_dashboard(self, user):
         """Afficher le dashboard après une connexion réussie"""
         try:
-            # Créer la vue du dashboard
-            self.dashboard_view = DashboardView()
-            # Associer la vue de connexion pour la redirection lors de la déconnexion
+            # Créer la vue du dashboard avec l'utilisateur connecté
+            self.dashboard_view = DashboardView(current_user=user)
+            # Associer la vue de connexion pour la déconnexion
             self.dashboard_view.login_view = self.view
 
-            # Créer les repositories
+            # Repositories
             classroom_repo = ClassroomRepository()
             reservation_repo = ReservationRepository()
+            building_repo = BuildingRepository()
 
-            # Créer le contrôleur du dashboard avec l'utilisateur connecté
+            # Contrôleur
             self.dashboard_controller = DashboardController(
                 self.dashboard_view,
                 classroom_repo,
                 reservation_repo,
+                building_repo=building_repo,
                 current_user=user,
             )
 
-            # Mettre à jour le titre avec le nom de l'utilisateur
+            # Titre fenêtre
             self.dashboard_view.setWindowTitle(f"Tableau de bord — {user.first_name} {user.name}")
 
-            # Afficher le dashboard
+            # Afficher le dashboard et masquer la connexion
             self.dashboard_view.show()
-
-            # Masquer la vue de connexion
             self.view.hide()
 
         except Exception as e:

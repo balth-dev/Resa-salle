@@ -15,5 +15,5 @@ class Reservation(Base):
     start_time = mapped_column(Time, nullable=False)
     end_time = mapped_column(Time, nullable=False)
     status = mapped_column(String(50), nullable=True)
-    id_classroom = mapped_column(BigInteger, ForeignKey("Classroom.id_classroom"), nullable=False)
+    id_classroom = mapped_column(BigInteger, ForeignKey("classroom.id_classroom"), nullable=False)
     id_user = mapped_column(BigInteger, ForeignKey("user.id_user"), nullable=False)

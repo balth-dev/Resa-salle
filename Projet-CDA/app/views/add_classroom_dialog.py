@@ -231,6 +231,6 @@ class AddClassroomDialog(QDialog):
             "stage": stage,
             "code_access": code,
             "id_building": building_id,
-            "floor_id": 1,
         }
         self.accept()
+
