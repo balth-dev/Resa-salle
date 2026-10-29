@@ -13,7 +13,11 @@ class GenderEnum(enum.Enum):
 class User(Base):
     __tablename__ = "user"
 
-    id_user = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    id_user = mapped_column(
+        BigInteger().with_variant(Integer, "sqlite"),
+        primary_key=True,
+        autoincrement=True,
+    )
     name = mapped_column(String(50), nullable=False)
     first_name = mapped_column(String(50), nullable=False)
     email = mapped_column(String(100), unique=True, nullable=False)

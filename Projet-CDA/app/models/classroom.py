@@ -1,11 +1,15 @@
-from sqlalchemy import BigInteger, String, Integer, ForeignKey
+from sqlalchemy import BigInteger, Integer, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from app.database.base import Base
 
 class Classroom(Base):
     __tablename__ = "Classroom"
 
-    id_classroom: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    id_classroom: Mapped[int] = mapped_column(
+        BigInteger().with_variant(Integer, "sqlite"),
+        primary_key=True,
+        autoincrement=True
+    )
     name: Mapped[str] = mapped_column(String(50), nullable=False)
     capacity: Mapped[int] = mapped_column(Integer, nullable=False)
     category: Mapped[str] = mapped_column(String(50), nullable=False)  # informatique ou traditionnelle

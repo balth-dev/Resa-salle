@@ -1,11 +1,13 @@
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
 
 from app.database.base import Base
 from app.database.engine import SessionLocal
 from app.repositories.user_repository import UserRepository
 from app.models.user import User
+from app.validators.user_validator import UserCreate
 
 # ---------- Fixture pour une base SQLite en mémoire ----------
 @pytest.fixture(scope="function")
@@ -13,7 +15,11 @@ def db_session():
     """Crée une base SQLite en mémoire, recrée les tables, et fournit une session.
     Remplace également la SessionLocal globale pour que le repository l'utilise.
     """
-    engine = create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False})
+    engine = create_engine(
+        "sqlite://",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
     Base.metadata.create_all(bind=engine)
     TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     
@@ -75,28 +81,12 @@ def test_get_by_email_returns_none_when_not_found(db_session):
 
 
 def test_add_hashes_password_and_creates_user(db_session):
-    class UserCreateSimple:
-        def __init__(self, name, first_name, email, password, id_role):
-            self.name = name
-            self.first_name = first_name
-            self.email = email
-            self.password = password
-            self.id_role = id_role
-        def model_dump(self):
-            return {
-                'name': self.name,
-                'first_name': self.first_name,
-                'email': self.email,
-                'password': self.password,
-                'id_role': self.id_role,
-            }
-
-    user_create = UserCreateSimple(
+    user_create = UserCreate(
         name="Doe",
-        first_name="Jane",
-        email="jane@example.com",
-        password="plaintextpassword",
-        id_role=2
+        surname="Jane",
+        mail="jane@example.com",
+        password="Plaintext1!",
+        id_role=2,
     )
 
     repo = UserRepository()
