@@ -18,7 +18,7 @@ from sqlalchemy.exc import IntegrityError, OperationalError
 
 from app.repositories.user_repository import UserRepository
 from app.validators.user_validator import UserCreate
-from pages.interface.Register_ui import Ui_Register
+from app.ui.Register_ui import Ui_Register
 
 FIELD_LABELS = {
     "lastname": "Nom",

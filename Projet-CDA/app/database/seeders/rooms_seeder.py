@@ -1,6 +1,5 @@
 from app.database.engine import SessionLocal
 from app.models.building import Building
-from app.models.floor import Floor
 from app.models.classroom import Classroom
 
 def seed_rooms():
@@ -17,20 +16,11 @@ def seed_rooms():
             print("Veuillez exécuter buildings_seeder.py avant ce script.")
             return
 
-        k1_rdc = session.query(Floor).filter_by(building_id=bat_k1.id_building, number=0).first()
-        k1_p1 = session.query(Floor).filter_by(building_id=bat_k1.id_building, number=1).first()
-        k2_rdc = session.query(Floor).filter_by(building_id=bat_k2.id_building, number=0).first()
-
-        if not k1_rdc or not k1_p1 or not k2_rdc:
-            print("Erreur : certains étages de K1 ou K2 sont introuvables.")
-            print("Veuillez exécuter floors_seeder.py avant ce script.")
-            return
-
         rooms_to_add = [
-            Classroom(name="Salle K1-01", capacity=30, category="traditionnelle", stage="RDC", id_building=bat_k1.id_building, floor_id=k1_rdc.id_floor),
-            Classroom(name="Salle K1-02", capacity=24, category="traditionnelle", stage="RDC", id_building=bat_k1.id_building, floor_id=k1_rdc.id_floor),
-            Classroom(name="Salle K1-101", capacity=35, category="informatique", stage="1er étage", id_building=bat_k1.id_building, floor_id=k1_p1.id_floor),
-            Classroom(name="Salle K2-01", capacity=20, category="traditionnelle", stage="RDC", id_building=bat_k2.id_building, floor_id=k2_rdc.id_floor)
+            Classroom(name="Salle K1-01", capacity=30, category="traditionnelle", stage="RDC", id_building=bat_k1.id_building),
+            Classroom(name="Salle K1-02", capacity=24, category="traditionnelle", stage="RDC", id_building=bat_k1.id_building),
+            Classroom(name="Salle K1-101", capacity=35, category="informatique", stage="1er", id_building=bat_k1.id_building),
+            Classroom(name="Salle K2-01", capacity=20, category="traditionnelle", stage="RDC", id_building=bat_k2.id_building),
         ]
 
         session.add_all(rooms_to_add)
