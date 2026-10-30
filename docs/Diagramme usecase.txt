@@ -1,0 +1,44 @@
+Diagramme usecase
+
+@startuml
+left to right direction
+
+actor "Professeur" as prof
+actor "Administrateur" as admin
+actor "Système d'envoi" as system
+
+rectangle "Réservation" {
+  usecase "S'authentifier" as Auth
+  usecase "Gérer les comptes et rôles" as UC1
+  usecase "Gérer les salles et équipements" as UC2
+  usecase "Désactiver une salle" as UC3
+  usecase "Consulter les salles disponibles" as UC4
+  usecase "Réserver une heure" as UC5
+  usecase "Consulter l'historique des réservations" as UC6
+  usecase "Générer et envoyer le code d'accès" as UC7
+  usecase "Visualiser statistiques (réservations/jour/salle)" as UC8
+  usecase "Gérer les incidents et maintenance" as UC9
+}
+
+admin --> UC1
+admin --> UC2
+admin --> UC3
+admin --> UC8
+admin --> UC9
+
+prof --> UC4
+prof --> UC5
+prof --> UC6
+
+UC5 ..> UC7 : <<extend>>
+UC7 --> system
+
+UC1 ..> Auth : <<include>>
+UC2 ..> Auth : <<include>>
+UC3 ..> Auth : <<include>>
+UC4 ..> Auth : <<include>>
+UC5 ..> Auth : <<include>>
+UC6 ..> Auth : <<include>>
+UC8 ..> Auth : <<include>>
+UC9 ..> Auth : <<include>>
+@enduml
